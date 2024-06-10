@@ -36,10 +36,36 @@ void insereValor(ArvBin **raiz) {
     }
 }
 
+void busca_inorder(ArvBin *raiz){
+    if(raiz != NULL){
+        busca_inorder(raiz->esq);
+        printf("%d   ", raiz -> info);
+        busca_inorder(raiz -> dir);
+    }
+}
+
+void busca_preorder(ArvBin *raiz){
+    if(raiz != NULL){
+        printf("%d   ", raiz -> info);
+        busca_preorder(raiz->esq);
+        busca_preorder(raiz -> dir);
+    }
+}
+
+void busca_postorder(ArvBin *raiz){
+    if(raiz != NULL){
+        busca_postorder(raiz->esq);
+        busca_postorder(raiz -> dir);
+        printf("%d   ", raiz -> info);
+    }
+}
+
 int main() {
     ArvBin *raiz = NULL;
     srand(time(NULL));
     insereValor(&raiz);
-
+    busca_inorder(raiz);
+//    busca_preorder(raiz);
+//    busca_postorder(raiz);
     return 0;
 }
