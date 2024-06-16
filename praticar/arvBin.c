@@ -36,36 +36,56 @@ void insereValor(ArvBin **raiz) {
     }
 }
 
-void busca_inorder(ArvBin *raiz){
-    if(raiz != NULL){
-        busca_inorder(raiz->esq);
-        printf("%d   ", raiz -> info);
-        busca_inorder(raiz -> dir);
+
+void remove_NO(ArvBin **raiz, int valor){
+
+
+    if (*raiz != NULL){
+        if(*raiz == valor){
+            ArvBin *aux = *raiz;
+            if ((*raiz)->esq && (*raiz)->dir == NULL){
+
+                free(aux);
+
+            }
+            else if((*raiz)->esq == NULL && (*raiz)->dir != NULL){
+                *raiz = (*raiz)->dir;
+            }
+            else if((*raiz)->esq != NULL && (*raiz)->dir == NULL){
+                *raiz = (*raiz)->esq;
+
+            }
+            else{
+                ArvBin* maior = maior_filho((*raiz)->esq);
+                (*raiz)->info = maior->info;
+                remove_NO(&(*raiz)->esq, maior->info);
+            }
+        }
+
+        else if(*raiz < valor)
+            remove_NO(&(*raiz)->esq, valor);
+        
+        else
+            remove_NO(&(*raiz)->dir, valor);
     }
 }
 
-void busca_preorder(ArvBin *raiz){
-    if(raiz != NULL){
-        printf("%d   ", raiz -> info);
-        busca_preorder(raiz->esq);
-        busca_preorder(raiz -> dir);
-    }
-}
+ArvBin* maior_filho(ArvBin *raiz){
+    ArvBin *maior = raiz;
+    if(raiz->esq->info > maior->info)
+        maior = raiz->esq;
+    else
+        maior = raiz->dir;
 
-void busca_postorder(ArvBin *raiz){
-    if(raiz != NULL){
-        busca_postorder(raiz->esq);
-        busca_postorder(raiz -> dir);
-        printf("%d   ", raiz -> info);
-    }
+    return maior;
 }
 
 int main() {
     ArvBin *raiz = NULL;
     srand(time(NULL));
     insereValor(&raiz);
-    busca_inorder(raiz);
-//    busca_preorder(raiz);
-//    busca_postorder(raiz);
+    int valor = 10;
+    remove_NO(&raiz, valor);
+
     return 0;
 }

@@ -17,7 +17,12 @@ void insereArvBin(ArvBin **raiz, int valor);
 //insere valores aleatórios na info da raiz
 void insereValor(ArvBin **raiz);
 
-//Busca valores em uma arvore binaria com o metodo inorder
-void busca_inorder(ArvBin *raiz);
+//Busca o maior filho da esquerda
+ArvBin* maior_filho(ArvBin *raiz);
+
+// remove um no da arvore binaria
+void remove_NO(ArvBin **raiz, int valor);
+
+
 
 #endif // ARVBIN_H
