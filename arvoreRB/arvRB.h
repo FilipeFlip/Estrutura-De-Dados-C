@@ -1,0 +1,27 @@
+#ifndef ARVRB_H
+#define ARVRB_H
+
+//definição da arvore
+typedef struct ArvRB{
+    int info;
+    struct ArvRB *esq;
+    struct ArvRB *dir;
+    int cor;
+} ArvRB;
+
+//Aloca espaço na memória para criar o nó da arvore
+void cria_NO(ArvRB **raiz, int valor);
+
+//insere valor no nó
+void insereArvRB(ArvRB **raiz, int valor);
+
+//Rotação para a esquerda
+ArvRB* rotaciona_esq(ArvRB *raiz);
+
+//Rotação para a direita
+ArvRB* rotaciona_dir(ArvRB *raiz);
+//saber_cor();
+//troca_cor();
+
+
+#endif
