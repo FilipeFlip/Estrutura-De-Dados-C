@@ -12,6 +12,7 @@ void cria_NO(ArvRB **raiz, int valor) {
         (*raiz)->info = valor;
         (*raiz)->esq = NULL;
         (*raiz)->dir = NULL;
+        (*raiz)->dir = RED;
     }
 }
 
@@ -28,14 +29,14 @@ void insereArvRB(ArvRB **raiz, int valor) {
 }
 
 ArvRB* rotaciona_esq(ArvRB *raiz){
-    ArvRB *B = raiz->dir;
+    ArvRB *nova = raiz->dir;
 
-    raiz->dir = B->esq;
-    B->esq = raiz;
-    B->cor = raiz->cor;
+    raiz->dir = nova->esq;
+    nova->esq = raiz;
+    nova->cor = raiz->cor;
     raiz->cor = RED;
 
-    return B;
+    return nova;
 }
 
 ArvRB* rotaciona_dir(ArvRB *raiz){
@@ -48,3 +49,21 @@ ArvRB* rotaciona_dir(ArvRB *raiz){
 
     return nova;
 }
+
+void troca_cor(ArvRB *raiz){
+    raiz->cor = !raiz->cor;
+    if(raiz->esq != NULL)
+        raiz->esq->cor = !raiz->esq->cor;
+    if(raiz->dir != NULL)
+        raiz->dir->cor = !raiz->dir->cor;
+}
+
+int ver_cor(ArvRB *raiz){
+    ArvRB *ver = raiz->cor;
+    if(raiz == NULL)
+        ver = BLACK;
+    else
+        ver = raiz->cor;
+    return ver;
+}
+

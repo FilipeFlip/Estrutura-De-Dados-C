@@ -20,8 +20,12 @@ ArvRB* rotaciona_esq(ArvRB *raiz);
 
 //Rotação para a direita
 ArvRB* rotaciona_dir(ArvRB *raiz);
-//saber_cor();
-//troca_cor();
+
+//Vê a cor do nó
+int ver_cor(ArvRB *raiz);
+
+//troca a cor do no vilho com o pai
+void troca_cor(ArvRB *raiz);
 
 
 #endif
