@@ -8,14 +8,11 @@
 
 
 int criar_ArvRB(ArvRB *raiz, int valor){
-    int confirma;
 
     raiz = insereArvBin(&raiz, valor);
 
     if((raiz) != NULL)
         (raiz)->cor = BLACK;
-
-    return confirma;
 }
 
 void cria_NO(ArvRB **raiz, int valor) {
@@ -38,6 +35,14 @@ void insereArvRB(ArvRB **raiz, int valor) {
             insereArvRB(&(*raiz)->dir, valor);
         }
     }
+    if(ver_cor((*raiz)->dir) == RED && ver_cor((*raiz)->esq) == BLACK)
+        raiz = rotaciona_esq(raiz);
+
+    if(ver_cor((*raiz)->esq) == RED && ver_cor((*raiz)->esq->esq) == RED)
+        raiz = rotaciona_dir(raiz);
+    
+    if(ver_cor((*raiz)->esq) == RED && ver_cor((*raiz)->dir) == RED)
+        troca_cor(raiz);
 }
 
 ArvRB* rotaciona_esq(ArvRB *raiz){
