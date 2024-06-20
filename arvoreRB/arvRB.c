@@ -6,6 +6,18 @@
 #define RED 1 // Define as cores
 #define BLACK 0
 
+
+int criar_ArvRB(ArvRB *raiz, int valor){
+    int confirma;
+
+    raiz = insereArvBin(&raiz, valor);
+
+    if((raiz) != NULL)
+        (raiz)->cor = BLACK;
+
+    return confirma;
+}
+
 void cria_NO(ArvRB **raiz, int valor) {
     *raiz = (ArvRB*)malloc(sizeof(ArvRB));
     if (*raiz != NULL) {
@@ -21,9 +33,9 @@ void insereArvRB(ArvRB **raiz, int valor) {
         cria_NO(raiz, valor);
     } else {
         if (valor < (*raiz)->info) {
-            insereArvBin(&(*raiz)->esq, valor);
+            insereArvRB(&(*raiz)->esq, valor);
         } else if (valor > (*raiz)->info) {
-            insereArvBin(&(*raiz)->dir, valor);
+            insereArvRB(&(*raiz)->dir, valor);
         }
     }
 }
@@ -67,3 +79,27 @@ int ver_cor(ArvRB *raiz){
     return ver;
 }
 
+ArvRB* moveRedEsq(ArvRB *raiz){
+    troca_cor(raiz);
+
+    if(ver_cor(raiz->dir->esq) == RED){
+        raiz->dir = rotaciona_dir(raiz->dir);
+        raiz = rotaciona_esq(raiz);
+        troca_cor(raiz);
+    }
+    return raiz;
+}
+
+ArvRB* moveRedDir(ArvRB *raiz){
+    troca_cor(raiz);
+
+    if(ver_cor(raiz->esq->esq) == RED){
+        raiz = rotaciona_dir(raiz);
+        troca_cor(raiz);
+    }
+}
+
+ArvRB* balancear(ArvRB *raiz){
+    if(ver_cor(raiz->dir) == RED);
+        raiz = rotaciona_esq(raiz);     
+}

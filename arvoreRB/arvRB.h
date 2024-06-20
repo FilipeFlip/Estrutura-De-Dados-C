@@ -9,6 +9,9 @@ typedef struct ArvRB{
     int cor;
 } ArvRB;
 
+//Cria a raiz da Arvore binaria
+int criar_ArvRB(ArvRB* raiz,int valor);
+
 //Aloca espaço na memória para criar o nó da arvore
 void cria_NO(ArvRB **raiz, int valor);
 
@@ -24,8 +27,13 @@ ArvRB* rotaciona_dir(ArvRB *raiz);
 //Vê a cor do nó
 int ver_cor(ArvRB *raiz);
 
-//troca a cor do no vilho com o pai
+//troca a cor do no filho com o pai
 void troca_cor(ArvRB *raiz);
 
+ArvRB* moveRedEsq();
+
+ArvRB* moveRedDir();
+
+ArvRB* balancear();
 
 #endif
