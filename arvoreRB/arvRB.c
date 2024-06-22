@@ -8,7 +8,6 @@
 
 
 int criar_ArvRB(ArvRB *raiz, int valor){
-
     raiz = insereArvBin(&raiz, valor);
 
     if((raiz) != NULL)
@@ -106,5 +105,85 @@ ArvRB* moveRedDir(ArvRB *raiz){
 
 ArvRB* balancear(ArvRB *raiz){
     if(ver_cor(raiz->dir) == RED);
-        raiz = rotaciona_esq(raiz);     
+        raiz = rotaciona_esq(raiz);
+
+    if((raiz->esq) != NULL && ver_cor(raiz->dir) == RED && ver_cor(raiz->esq->esq) == RED)
+        raiz = rotaciona_dir(raiz);
+
+    if(ver_cor(raiz->esq) == RED && ver_cor(raiz->dir) == RED)
+        troca_cor(raiz);
+}
+
+int busca_NO(ArvRB *raiz, int valor){
+    int  achou;
+
+    if((raiz) != NULL){
+        if((raiz->info) == valor)
+            achou = 1;
+        if((raiz->info) > valor)
+            busca_NO((raiz->esq), valor);
+        if((raiz->info) < valor)
+            busca_NO((raiz->dir), valor);
+    }
+
+    else
+        achou = 0;
+
+    return achou;
+}
+
+ArvRB* remove_ArvRB(ArvRB *raiz, int valor){
+    if(busca_NO(raiz, valor)){
+        ArvRB* NO = raiz;
+
+        NO = remove_NO (raiz, valor);
+
+        if(raiz != NULL)
+            (raiz)->cor = BLACK;
+    }
+}
+
+ArvRB* remove_NO(ArvRB *raiz, int valor){
+    if(valor < raiz->info){
+        if(ver_cor(raiz->esq) == BLACK && ver_cor(raiz->esq->esq) == BLACK)
+            raiz = moveRedDir(raiz);
+    }
+    else{
+        if(ver_cor(raiz->esq) == RED)
+            raiz = rotaciona_dir(raiz);
+        
+        if(valor == (raiz->info) && (raiz->dir == NULL))
+            free(raiz);
+
+        if(ver_cor(raiz->dir) == BLACK && ver_cor(raiz->dir->esq) == BLACK)
+            raiz = moveRedDir(raiz);
+
+        if(valor == raiz->info){
+            ArvRB* x = busca_menor(raiz->dir);
+            raiz->info = x->info;
+            raiz->dir = remove_menor(raiz->dir);
+        }
+        else{
+            raiz->dir = remove_NO(raiz->dir, valor);
+        }
+    }
+}
+
+ArvRB* remove_menor(ArvRB *raiz){
+    if(raiz->esq == NULL)
+        free(raiz);
+    if(ver_cor(raiz->esq) == BLACK && ver_cor(raiz->esq->esq) == BLACK)
+
+    raiz->esq = remove_menor(raiz->esq);
+    return balancear(raiz);
+}
+
+ArvRB* busca_menor(ArvRB *raiz){
+    ArvRB *no1 = raiz;
+    ArvRB *no2 = raiz->esq;
+    while(no2 != NULL){
+        no1 = no2;
+        no2 = no2->esq;
+    }
+    return no1;
 }

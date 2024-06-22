@@ -76,7 +76,6 @@ ArvBin* maior_filho(ArvBin *raiz){
         maior = raiz->esq;
     else
         maior = raiz->dir;
-
     return maior;
 }
 

@@ -38,4 +38,14 @@ ArvRB* moveRedDir(ArvRB *raiz);
 // Balanceia o nó
 ArvRB* balancear(ArvRB *raiz);
 
+// remove um nó
+
+ArvRB* remove_ArvRB(ArvRB *raiz, int valor);
+
+ArvRB* remove_NO(ArvRB *raiz, int valor);
+
+ArvRB* remove_menor(ArvRB *raiz);
+
+ArvRB* busca_menor(ArvRB *raiz);
+
 #endif
