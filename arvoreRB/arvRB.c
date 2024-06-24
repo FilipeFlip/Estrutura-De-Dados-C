@@ -14,116 +14,116 @@ int criar_ArvRB(ArvRB *raiz, int valor){
         (raiz)->cor = BLACK;
 }
 
-void cria_NO(ArvRB **raiz, int valor) {
-    *raiz = (ArvRB*)malloc(sizeof(ArvRB));
-    if (*raiz != NULL) {
-        (*raiz)->info = valor;
-        (*raiz)->esq = NULL;
-        (*raiz)->dir = NULL;
-        (*raiz)->dir = RED;
+void cria_NO(ArvRB **NO, int valor) {
+    *NO = (ArvRB*)malloc(sizeof(ArvRB));
+    if (*NO != NULL) {
+        (*NO)->info = valor;
+        (*NO)->esq = NULL;
+        (*NO)->dir = NULL;
+        (*NO)->dir = RED;
     }
 }
 
-void insereArvRB(ArvRB **raiz, int valor) {
-    if (*raiz == NULL) {
-        cria_NO(raiz, valor);
+void insereArvRB(ArvRB **NO, int valor) {
+    if (*NO == NULL) {
+        cria_NO(NO, valor);
     } else {
-        if (valor < (*raiz)->info) {
-            insereArvRB(&(*raiz)->esq, valor);
-        } else if (valor > (*raiz)->info) {
-            insereArvRB(&(*raiz)->dir, valor);
+        if (valor < (*NO)->info) {
+            insereArvRB(&(*NO)->esq, valor);
+        } else if (valor > (*NO)->info) {
+            insereArvRB(&(*NO)->dir, valor);
         }
     }
-    if(ver_cor((*raiz)->dir) == RED && ver_cor((*raiz)->esq) == BLACK)
-        raiz = rotaciona_esq(raiz);
+    if(ver_cor((*NO)->dir) == RED && ver_cor((*NO)->esq) == BLACK)
+        NO = rotaciona_esq(NO);
 
-    if(ver_cor((*raiz)->esq) == RED && ver_cor((*raiz)->esq->esq) == RED)
-        raiz = rotaciona_dir(raiz);
+    if(ver_cor((*NO)->esq) == RED && ver_cor((*NO)->esq->esq) == RED)
+        NO = rotaciona_dir(NO);
     
-    if(ver_cor((*raiz)->esq) == RED && ver_cor((*raiz)->dir) == RED)
-        troca_cor(raiz);
+    if(ver_cor((*NO)->esq) == RED && ver_cor((*NO)->dir) == RED)
+        troca_cor(NO);
 }
 
-ArvRB* rotaciona_esq(ArvRB *raiz){
-    ArvRB *nova = raiz->dir;
+ArvRB* rotaciona_esq(ArvRB *NO){
+    ArvRB *nova = NO->dir;
 
-    raiz->dir = nova->esq;
-    nova->esq = raiz;
-    nova->cor = raiz->cor;
-    raiz->cor = RED;
+    NO->dir = nova->esq;
+    nova->esq = NO;
+    nova->cor = NO->cor;
+    NO->cor = RED;
 
     return nova;
 }
 
-ArvRB* rotaciona_dir(ArvRB *raiz){
-    ArvRB *nova = raiz->esq;
+ArvRB* rotaciona_dir(ArvRB *NO){
+    ArvRB *nova = NO->esq;
 
-    raiz->esq = nova->dir;
-    nova->dir = raiz;
-    nova->cor = raiz->cor;
-    raiz->cor = RED;
+    NO->esq = nova->dir;
+    nova->dir = NO;
+    nova->cor = NO->cor;
+    NO->cor = RED;
 
     return nova;
 }
 
-void troca_cor(ArvRB *raiz){
-    raiz->cor = !raiz->cor;
-    if(raiz->esq != NULL)
-        raiz->esq->cor = !raiz->esq->cor;
-    if(raiz->dir != NULL)
-        raiz->dir->cor = !raiz->dir->cor;
+void troca_cor(ArvRB *NO){
+    NO->cor = !NO->cor;
+    if(NO->esq != NULL)
+        NO->esq->cor = !NO->esq->cor;
+    if(NO->dir != NULL)
+        NO->dir->cor = !NO->dir->cor;
 }
 
-int ver_cor(ArvRB *raiz){
-    ArvRB *ver = raiz->cor;
-    if(raiz == NULL)
+int ver_cor(ArvRB *NO){
+    ArvRB *ver = NO->cor;
+    if(NO == NULL)
         ver = BLACK;
     else
-        ver = raiz->cor;
+        ver = NO->cor;
     return ver;
 }
 
-ArvRB* moveRedEsq(ArvRB *raiz){
-    troca_cor(raiz);
+ArvRB* moveRedEsq(ArvRB *NO){
+    troca_cor(NO);
 
-    if(ver_cor(raiz->dir->esq) == RED){
-        raiz->dir = rotaciona_dir(raiz->dir);
-        raiz = rotaciona_esq(raiz);
-        troca_cor(raiz);
+    if(ver_cor(NO->dir->esq) == RED){
+        NO->dir = rotaciona_dir(NO->dir);
+        NO = rotaciona_esq(NO);
+        troca_cor(NO);
     }
-    return raiz;
+    return NO;
 }
 
-ArvRB* moveRedDir(ArvRB *raiz){
-    troca_cor(raiz);
+ArvRB* moveRedDir(ArvRB *NO){
+    troca_cor(NO);
 
-    if(ver_cor(raiz->esq->esq) == RED){
-        raiz = rotaciona_dir(raiz);
-        troca_cor(raiz);
+    if(ver_cor(NO->esq->esq) == RED){
+        NO = rotaciona_dir(NO);
+        troca_cor(NO);
     }
 }
 
-ArvRB* balancear(ArvRB *raiz){
-    if(ver_cor(raiz->dir) == RED);
-        raiz = rotaciona_esq(raiz);
+ArvRB* balancear(ArvRB *NO){
+    if(ver_cor(NO->dir) == RED);
+        NO = rotaciona_esq(NO);
 
-    if((raiz->esq) != NULL && ver_cor(raiz->dir) == RED && ver_cor(raiz->esq->esq) == RED)
-        raiz = rotaciona_dir(raiz);
+    if((NO->esq) != NULL && ver_cor(NO->dir) == RED && ver_cor(NO->esq->esq) == RED)
+        NO = rotaciona_dir(NO);
 
-    if(ver_cor(raiz->esq) == RED && ver_cor(raiz->dir) == RED)
-        troca_cor(raiz);
+    if(ver_cor(NO->esq) == RED && ver_cor(NO->dir) == RED)
+        troca_cor(NO);
 }
 
-int busca_NO(ArvRB *raiz, int valor){
+int busca_NO(ArvRB *NO, int valor){
     int  achou;
 
-    if((raiz) != NULL){
-        if((raiz->info) == valor)
+    if((NO) != NULL){
+        if((NO->info) == valor)
             achou = 1;
-        if((raiz->info) > valor)
-            busca_NO((raiz->esq), valor);
-        if((raiz->info) < valor)
-            busca_NO((raiz->dir), valor);
+        if((NO->info) > valor)
+            busca_NO((NO->esq), valor);
+        if((NO->info) < valor)
+            busca_NO((NO->dir), valor);
     }
 
     else
@@ -132,55 +132,55 @@ int busca_NO(ArvRB *raiz, int valor){
     return achou;
 }
 
-ArvRB* remove_ArvRB(ArvRB *raiz, int valor){
-    if(busca_NO(raiz, valor)){
-        ArvRB* NO = raiz;
+ArvRB* remove_ArvRB(ArvRB *NO, int valor){
+    if(busca_NO(NO, valor)){
+        ArvRB* NO = NO;
 
-        NO = remove_NO (raiz, valor);
+        NO = remove_NO (NO, valor);
 
-        if(raiz != NULL)
-            (raiz)->cor = BLACK;
+        if(NO != NULL)
+            (NO)->cor = BLACK;
     }
 }
 
-ArvRB* remove_NO(ArvRB *raiz, int valor){
-    if(valor < raiz->info){
-        if(ver_cor(raiz->esq) == BLACK && ver_cor(raiz->esq->esq) == BLACK)
-            raiz = moveRedDir(raiz);
+ArvRB* remove_NO(ArvRB *NO, int valor){
+    if(valor < NO->info){
+        if(ver_cor(NO->esq) == BLACK && ver_cor(NO->esq->esq) == BLACK)
+            NO = moveRedDir(NO);
     }
     else{
-        if(ver_cor(raiz->esq) == RED)
-            raiz = rotaciona_dir(raiz);
+        if(ver_cor(NO->esq) == RED)
+            NO = rotaciona_dir(NO);
         
-        if(valor == (raiz->info) && (raiz->dir == NULL))
-            free(raiz);
+        if(valor == (NO->info) && (NO->dir == NULL))
+            free(NO);
 
-        if(ver_cor(raiz->dir) == BLACK && ver_cor(raiz->dir->esq) == BLACK)
-            raiz = moveRedDir(raiz);
+        if(ver_cor(NO->dir) == BLACK && ver_cor(NO->dir->esq) == BLACK)
+            NO = moveRedDir(NO);
 
-        if(valor == raiz->info){
-            ArvRB* x = busca_menor(raiz->dir);
-            raiz->info = x->info;
-            raiz->dir = remove_menor(raiz->dir);
+        if(valor == NO->info){
+            ArvRB* x = busca_menor(NO->dir);
+            NO->info = x->info;
+            NO->dir = remove_menor(NO->dir);
         }
         else{
-            raiz->dir = remove_NO(raiz->dir, valor);
+            NO->dir = remove_NO(NO->dir, valor);
         }
     }
 }
 
-ArvRB* remove_menor(ArvRB *raiz){
-    if(raiz->esq == NULL)
-        free(raiz);
-    if(ver_cor(raiz->esq) == BLACK && ver_cor(raiz->esq->esq) == BLACK)
+ArvRB* remove_menor(ArvRB *NO){
+    if(NO->esq == NULL)
+        free(NO);
+    if(ver_cor(NO->esq) == BLACK && ver_cor(NO->esq->esq) == BLACK)
 
-    raiz->esq = remove_menor(raiz->esq);
-    return balancear(raiz);
+    NO->esq = remove_menor(NO->esq);
+    return balancear(NO);
 }
 
-ArvRB* busca_menor(ArvRB *raiz){
-    ArvRB *no1 = raiz;
-    ArvRB *no2 = raiz->esq;
+ArvRB* busca_menor(ArvRB *NO){
+    ArvRB *no1 = NO;
+    ArvRB *no2 = NO->esq;
     while(no2 != NULL){
         no1 = no2;
         no2 = no2->esq;

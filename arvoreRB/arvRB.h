@@ -13,39 +13,41 @@ typedef struct ArvRB{
 int criar_ArvRB(ArvRB* raiz,int valor);
 
 //Aloca espaço na memória para criar o nó da arvore
-void cria_NO(ArvRB **raiz, int valor);
+void cria_NO(ArvRB **NO, int valor);
 
 //insere valor no nó
-void insereArvRB(ArvRB **raiz, int valor);
+void insereArvRB(ArvRB **NO, int valor);
 
 //Rotação para a esquerda
-ArvRB* rotaciona_esq(ArvRB *raiz);
+ArvRB* rotaciona_esq(ArvRB *NO);
 
 //Rotação para a direita
-ArvRB* rotaciona_dir(ArvRB *raiz);
+ArvRB* rotaciona_dir(ArvRB *NO);
 
 //troca a cor do no filho com o pai
-void troca_cor(ArvRB *raiz);
+void troca_cor(ArvRB *NO);
 
 //Vê a cor do nó
-int ver_cor(ArvRB *raiz);
+int ver_cor(ArvRB *NO);
 
 //move o nó vermelho
-ArvRB* moveRedEsq(ArvRB *raiz);
+ArvRB* moveRedEsq(ArvRB *NO);
 
-ArvRB* moveRedDir(ArvRB *raiz);
+ArvRB* moveRedDir(ArvRB *NO);
 
 // Balanceia o nó
-ArvRB* balancear(ArvRB *raiz);
+ArvRB* balancear(ArvRB *NO);
+
+//apaga a árvore quando não tem manis nenhum nó
+ArvRB* remove_ArvRB(ArvRB *NO, int valor);
 
 // remove um nó
+ArvRB* remove_NO(ArvRB *NO, int valor);
 
-ArvRB* remove_ArvRB(ArvRB *raiz, int valor);
+// remove o menor nó
+ArvRB* remove_menor(ArvRB *NO);
 
-ArvRB* remove_NO(ArvRB *raiz, int valor);
-
-ArvRB* remove_menor(ArvRB *raiz);
-
-ArvRB* busca_menor(ArvRB *raiz);
+//busca o menor nó
+ArvRB* busca_menor(ArvRB *NO);
 
 #endif
