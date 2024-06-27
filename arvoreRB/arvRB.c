@@ -5,15 +5,13 @@
 
 
 
-int criaCurso(Curso **raiz, int valor) {
-    int resposta;
-    *raiz = insereCurso(*raiz, valor, &resposta);
+void criaCurso(Curso **raiz, int valor) {
+    *raiz = insereCurso(*raiz, valor);
     if ((*raiz) != NULL)
         (*raiz)->cor = BLACK;
-    return resposta;
 }
 
-Curso* insereCurso(Curso *curso, int valor, int *resposta){
+Curso* insereCurso(Curso *curso, int valor){
     if (curso == NULL){
         Curso *novoCurso = (Curso*)malloc(sizeof(Curso));
         if(novoCurso != NULL){
@@ -24,37 +22,35 @@ Curso* insereCurso(Curso *curso, int valor, int *resposta){
             novoCurso->esq = NULL;
             novoCurso->dir = NULL;
             novoCurso->cor = RED;
-            *resposta = 1;
             return novoCurso;
-        } else {
-            *resposta = 0;
-            return NULL;
+        }
     }
-    } else {
-        // Insira lógica adicional para inserir o curso na árvore, se necessário
-        *resposta = 0;
-        return curso;
-    //if(valor = curso->codCurso){
-    //     printf("\nCodigo duplicado");
-    //     *resposta = 0;
-    // }
-    // else{
-    //     if(valor < curso->codCurso)
-    //         curso->esq = insereCurso(curso->esq, valor, resposta);
-    //     else
-    //         curso->dir = insereCurso(curso->dir, valor, resposta);
-    // }
+    printf("aqui2");
 
-    // if(ver_cor(curso->dir) == RED && ver_cor(curso->esq) == BLACK);
-    //     curso = rotacionaEsquerda(curso);
+    if (valor == curso->codCurso) {
+        printf("\nCódigo duplicado\n");
+    }else{
+        printf("aqui3");
+        if(valor < curso->codCurso)
+            curso->esq = insereCurso(curso->esq, valor);
+        else
+            curso->dir = insereCurso(curso->dir, valor);
+    }
+    printf("Aqui");
+    if(ver_cor(curso->dir) == RED && ver_cor(curso->esq) == BLACK){
+
+        curso = rotacionaEsquerda(curso);
+    }
     
-    // if(ver_cor(curso->esq) == RED && ver_cor(curso->esq->esq) == RED);
-    //     curso = rotacionaDireita(curso);
+    if(ver_cor(curso->esq) == RED && ver_cor(curso->esq->esq) == RED)
+        curso = rotacionaDireita(curso);
 
-    // if(ver_cor(curso->esq) == RED && ver_cor(curso->dir) == BLACK);
-    //     trocaCor(curso);
-    }
+    //if(ver_cor(curso->esq) == RED && ver_cor(curso->dir) == RED)
+        //trocaCor(curso);
+    
+    return curso;
 }
+
 void busca_inorder(Curso *raiz) {
     if (raiz != NULL) {
         busca_inorder(raiz->esq);
@@ -63,34 +59,34 @@ void busca_inorder(Curso *raiz) {
     }
 }
 
-// ArvRB* rotaciona_esq(ArvRB *NO){
-//     ArvRB *nova = NO->dir;
+Curso* rotacionaEsquerda(Curso *curso){
+    Curso *nova = curso->dir;
 
-//     NO->dir = nova->esq;
-//     nova->esq = NO;
-//     nova->cor = NO->cor;
-//     NO->cor = RED;
+    curso->dir = curso->esq;
+    nova->esq = curso;
+    nova->cor = curso->cor;
+    curso->cor = RED;
 
-//     return nova;
-// }
+    return nova;
+}
 
-// ArvRB* rotaciona_dir(ArvRB *NO){
-//     ArvRB *nova = NO->esq;
+Curso* rotacionaDireita(Curso *curso){
+    Curso *nova = curso->esq;
 
-//     NO->esq = nova->dir;
-//     nova->dir = NO;
-//     nova->cor = NO->cor;
-//     NO->cor = RED;
+    curso->esq = nova->dir;
+    nova->dir = curso;
+    nova->cor = curso->cor;
+    curso->cor = RED;
 
-//     return nova;
-// }
+    return nova;
+}
 
-// void troca_cor(ArvRB *NO){
-//     NO->cor = !NO->cor;
-//     if(NO->esq != NULL)
-//         NO->esq->cor = !NO->esq->cor;
-//     if(NO->dir != NULL)
-//         NO->dir->cor = !NO->dir->cor;
+// void troca_cor(Curso *curso){
+//     curso->cor = !curso->cor;
+//     if(curso->esq != NULL)
+//         curso->esq->cor = !curso->esq->cor;
+//     if(curso->dir != NULL)
+//         curso->dir->cor = !curso->dir->cor;
 // }
 
 int ver_cor(Curso *curso){
