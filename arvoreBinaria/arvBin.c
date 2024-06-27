@@ -79,6 +79,14 @@ ArvBin* maior_filho(ArvBin *raiz){
     return maior;
 }
 
+void busca_inorder(ArvBin *raiz){
+    if(raiz != NULL){
+        busca_inorder(raiz->esq);
+        printf("%d   ", raiz -> info);
+        busca_inorder(raiz -> dir);
+    }
+}
+
 int main() {
     ArvBin *raiz = NULL;
     srand(time(NULL));
