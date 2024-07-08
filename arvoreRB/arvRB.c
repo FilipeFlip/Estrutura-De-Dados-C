@@ -3,102 +3,161 @@
 #include <time.h>
 #include "arvRB.h"
 
-
-
-void criaCurso(Curso **raiz, int valor) {
-    *raiz = insereCurso(*raiz, valor);
-    if ((*raiz) != NULL)
-        (*raiz)->cor = BLACK;
+void criaArv(Curso **raiz, int code, int ndisciplina){
+    insere(raiz, code, ndisciplina);
+    if((*raiz) != NULL)
+        (*raiz)->info->cor = BLACK;
 }
 
-Curso* insereCurso(Curso *curso, int valor){
-    if (curso == NULL){
-        Curso *novoCurso = (Curso*)malloc(sizeof(Curso));
-        if(novoCurso != NULL){
-            novoCurso->codCurso = valor;
-            novoCurso->quantidadeBlocos = 0;
-            novoCurso->quantidadeDisciplina = 0;
-            novoCurso->disciplinas = NULL;
-            novoCurso->esq = NULL;
-            novoCurso->dir = NULL;
-            novoCurso->cor = RED;
-            return novoCurso;
+void insere(Curso **raiz, int code, int ndisciplina) {
+    
+    if (*raiz == NULL) {
+        printf("test raiz");
+        cont ++;
+        *raiz = cria_NO(code, ndisciplina);
+    } else if (code < (*raiz)->info->codigo) {
+        printf("test esq");
+        insere(&(*raiz)->esq, code, ndisciplina);
+    } else if (code > (*raiz)->info->codigo) {
+        printf("test dir");
+        insere(&(*raiz)->dir, code, ndisciplina);
+    } else {
+    }
+    *raiz = balancear(*raiz);
+}
+
+Curso* cria_NO(int code, int ndisciplina){
+    Curso *novo_NO = (Curso*)malloc(sizeof(Curso));
+    if (novo_NO != NULL){
+        novo_NO->info = (Info*)malloc(sizeof(Info));
+        if (novo_NO->info != NULL){
+            novo_NO->info->codigo = code;
+            novo_NO->info->disciplinas = ndisciplina;
+            novo_NO->info->cor = RED;
+            novo_NO->dir = NULL;
+            novo_NO->esq = NULL;
         }
     }
-    printf("aqui2");
+    return novo_NO;
+}
 
-    if (valor == curso->codCurso) {
-        printf("\nCódigo duplicado\n");
-    }else{
-        printf("aqui3");
-        if(valor < curso->codCurso)
-            curso->esq = insereCurso(curso->esq, valor);
-        else
-            curso->dir = insereCurso(curso->dir, valor);
-    }
-    printf("Aqui");
-    if(ver_cor(curso->dir) == RED && ver_cor(curso->esq) == BLACK){
-
-        curso = rotacionaEsquerda(curso);
-    }
+Curso* balancear(Curso *NO) {
+    // Nó à direita é vermelho e nó à esquerda é preto
+    if (cor(NO->dir) == RED && cor(NO->esq) == BLACK)
+        NO = rotacionaEsquerda(NO);
+    // Caso 2: Nó à esquerda é vermelho e o filho esquerdo do nó à esquerda também é vermelho
+    if (cor(NO->esq) == RED && cor(NO->esq->esq) == RED)
+        NO = rotacionaDireita(NO);
+    // Caso 3: Ambos filhos são vermelhos
+    if (cor(NO->esq) == RED && cor(NO->dir) == RED)
+        trocaCor(NO);
     
-    if(ver_cor(curso->esq) == RED && ver_cor(curso->esq->esq) == RED)
-        curso = rotacionaDireita(curso);
-
-    //if(ver_cor(curso->esq) == RED && ver_cor(curso->dir) == RED)
-        //trocaCor(curso);
-    
-    return curso;
+    return NO;
 }
 
-void busca_inorder(Curso *raiz) {
-    if (raiz != NULL) {
-        busca_inorder(raiz->esq);
-        printf("Código do Curso: %d\n", raiz->codCurso);
-        busca_inorder(raiz->dir);
-    }
-}
-
-Curso* rotacionaEsquerda(Curso *curso){
-    Curso *nova = curso->dir;
-
-    curso->dir = curso->esq;
-    nova->esq = curso;
-    nova->cor = curso->cor;
-    curso->cor = RED;
-
-    return nova;
-}
-
-Curso* rotacionaDireita(Curso *curso){
-    Curso *nova = curso->esq;
-
-    curso->esq = nova->dir;
-    nova->dir = curso;
-    nova->cor = curso->cor;
-    curso->cor = RED;
-
-    return nova;
-}
-
-// void troca_cor(Curso *curso){
-//     curso->cor = !curso->cor;
-//     if(curso->esq != NULL)
-//         curso->esq->cor = !curso->esq->cor;
-//     if(curso->dir != NULL)
-//         curso->dir->cor = !curso->dir->cor;
-// }
-
-int ver_cor(Curso *curso){
-    int ver = curso->cor;
-    if(curso == NULL)
+int cor(Curso *NO){
+    int ver;
+    if(NO == NULL)
         ver = BLACK;
-    else
-        ver = curso->cor;
+    else{
+        ver = NO->info->cor;
+        printf("cor do no %d\n", ver);
+    }
     return ver;
 }
 
+void trocaCor(Curso *NO){
+    printf("trocou");
+    NO->info->cor = !NO->info->cor;
+    if(NO->esq != NULL)
+        NO->esq->info->cor = !NO->esq->info->cor;
+    if(NO->dir != NULL)
+        NO->dir->info->cor = !NO->dir->info->cor; 
+}
 
+Curso* rotacionaDireita(Curso *NO){
+    Curso *aux = NO->esq;
+    NO->esq = aux->dir;
+    aux->dir = NO;
+    aux->info->cor = NO->info->cor;
+    NO->info->cor = RED;
+
+    return aux;
+}
+
+Curso* rotacionaEsquerda(Curso *NO){
+    Curso *aux = NO->dir;
+    NO->dir = aux->esq;
+    aux->esq = NO;
+    aux->info->cor = NO->info->cor;
+    NO->info->cor = RED;
+
+    return aux;
+}
+
+
+int codigoCurso(){
+    // int x = 1 + ( rand() % 1000 );
+    int x;
+    printf("\nCodigo do Curso: ");
+    scanf("%d", &x);
+    return x;
+}
+
+void busca_inorder(Curso *NO) {
+    if (NO != NULL) {
+        busca_inorder(NO->esq);
+        printf("\nCodigo do curso: %d", NO->info->codigo);
+        printf("\nQuantidade de disciplinas: %d", NO->info->disciplinas);
+        printf("\nCor do NO: %s\n", NO->info->cor == RED ? "RED" : "BLACK");
+        printf("\n-------------------------------------------------\n");
+        busca_inorder(NO->dir);
+    }
+}
+
+int main(){
+    srand(time(NULL));
+    int code, escolha, ndisciplina;
+    Curso* raiz = NULL;
+
+    do{
+        // Exibir o menu
+        printf("\n***********************************\n");
+        printf("Menu:\n");
+        printf("0 - Sair\n");
+        printf("1 - ADICIONAR NOVO CURSO 1\n");
+        printf("2 - EXIBIR CURSOS\n");
+        printf("3 - MOSTRAR COR DOS CURSOS\n");
+        printf("4 - Op 4\n");
+        printf("5 - Op 5\n\n");
+        printf("Escolha uma op (0-5): \n");
+        scanf("%d", &escolha);
+
+        switch (escolha)
+        {
+        case 1:
+            code = codigoCurso();
+            printf("Quantidade de Disciplinas: \n");
+            scanf("%d", &ndisciplina);
+            criaArv(&raiz, code, ndisciplina);
+            break;
+
+        case 2:
+            if (raiz != NULL) {
+                    printf("Cursos:\n");
+                    busca_inorder(raiz);
+                } else {
+                    printf("\nNenhum curso adicionado.\n");
+                }
+            break;
+
+        case 3:
+            break;
+        }
+    } while (escolha != 0);
+
+    return 0;
+}
 
 // ArvRB* moveRedEsq(ArvRB *NO){
 //     troca_cor(NO);
@@ -204,49 +263,3 @@ int ver_cor(Curso *curso){
 //     }
 //     return no1;
 // }
-
-int main(){
-
-    int escolha, valor = 1;
-
-    Curso* raiz = NULL;
-
-    do{
-
-        // Exibir o menu
-        printf("Menu:\n");
-        printf("0 - Sair\n");
-        printf("1 - ADICIONAR NOVO CURSO 1\n");
-        printf("2 - EXIBIR CURSOS\n");
-        printf("3 - MOSTRAR COR DOS CURSOS\n");
-        printf("4 - Op 4\n");
-        printf("5 - Op 5\n\n");
-        printf("Escolha uma op (0-5): \n");
-        scanf("%d", &escolha);
-
-        switch (escolha)
-        {
-        case 1:
-            criaCurso(&raiz, valor);
-            break;
-        
-        case 2:
-            if (raiz != NULL) {
-                    printf("Cursos:\n");
-                    busca_inorder(raiz);
-                } else {
-                    printf("\n Nenhum curso adicionado.\n");
-                }
-            break;
-
-        case 3:
-            if(raiz != NULL){
-                int cor = ver_cor(raiz);
-                printf("%d", cor);
-            }
-            break;
-        }
-    } while (escolha != 0);
-
-    return 0;
-}
