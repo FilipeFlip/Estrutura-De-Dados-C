@@ -3,6 +3,7 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "arvrb.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "string.h": "c"
     }
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
+#include <ctype.h>
 #include "arvRB.h"
 
 void criaArv(Arvore **raiz, int code, int ndisciplina){
@@ -223,48 +224,98 @@ Arvore* removeMenor(Arvore *NO){
     return balancear(NO);
 }
 
+// Função para verificar se a string contém apenas dígitos
+int inteiroMenu(const char *str) {
+    if (str == NULL || *str == '\0') {
+        return 0;
+    }
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (!isdigit((unsigned char)str[i])) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
-int main(){
-    srand(time(NULL));
-    int code, escolha, ndisciplina;
+// Função para ler um inteiro do menu
+int lerInteiroMenu() {
+    char entrada[100];
+    while (1) {
+        // Lê a entrada do usuário como uma string
+        if (fgets(entrada, sizeof(entrada), stdin) != NULL) {
+            // Remove o caractere de nova linha, se houver
+            size_t len = strlen(entrada);
+            if (len > 0 && entrada[len-1] == '\n') {
+                entrada[len-1] = '\0';
+            }
+            // Verifica se a entrada é um número inteiro válido
+            if (inteiroMenu(entrada)) {
+                return atoi(entrada); // Converte para inteiro e retorna
+            } else {
+                printf("Entrada inválida. Por favor, digite um número inteiro.\n");
+            }
+        } else {
+            printf("Erro ao ler a entrada. Tente novamente.\n");
+        }
+    }
+}
+
+int main() {
+    int code, escolha = 0, ndisciplina;
     Arvore* raiz = NULL;
 
-    do{
+    do {
         // Exibir o menu
         printf("\n***********************************\n");
         printf("Menu:\n");
         printf("0 - Sair\n");
         printf("1 - ADICIONAR NOVO Arvore 1\n");
-        printf("2 - EXIBIR ArvoreS\n");
+        printf("2 - EXIBIR Arvores\n");
         printf("3 - REMOVER CURSO\n");
         printf("4 - Op 4\n");
         printf("5 - Op 5\n\n");
-        printf("Escolha uma op (0-5): \n");
-        scanf("%d", &escolha);
+        printf("Escolha uma op (0-5): ");
+        
+        escolha = lerInteiroMenu();
 
-        switch (escolha)
-        {
-        case 1:
-            code = codigoArvore();
-            printf("Quantidade de Disciplinas: \n");
-            scanf("%d", &ndisciplina);
-            criaArv(&raiz, code, ndisciplina);
-            break;
+        switch (escolha) {
+            case 1:
+                printf("Codigo do Arvore: ");
+                code = lerInteiroMenu();
+                printf("Quantidade de Disciplinas: ");
+                ndisciplina = lerInteiroMenu();
+                criaArv(&raiz, code, ndisciplina);
+                break;
 
-        case 2:
-            if (raiz != NULL) {
+            case 2:
+                if (raiz != NULL) {
                     printf("Arvores:\n");
                     busca_inorder(raiz);
                 } else {
                     printf("\nNenhum Arvore adicionado.\n");
                 }
-            break;
+                break;
 
-        case 3:
-            printf("Codigo do curso a ser removido: ");
-            scanf("%d", &code);
-            remove_Arvore(raiz, code);
-            break;
+            case 3:
+                printf("Codigo do curso a ser removido: ");
+                code = lerInteiroMenu();
+                raiz = remove_NO(raiz, code);
+                break;
+                
+            case 4:
+                // Implementação da opção 4
+                break;
+                
+            case 5:
+                // Implementação da opção 5
+                break;
+
+            case 0:
+                printf("Saindo...\n");
+                break;
+
+            default:
+                printf("Opção inválida. Por favor, escolha uma opção válida.\n");
         }
     } while (escolha != 0);
 

@@ -41,5 +41,9 @@ Arvore* remove_NO(Arvore *NO, int code);
 int remove_Arvore(Arvore *NO, int code);
 Arvore* removeMenor(Arvore *NO);
 
+//Funções Menu
+int inteiroMenu(const char *str);
+int lerInteiroMenu();
+
 
 #endif
