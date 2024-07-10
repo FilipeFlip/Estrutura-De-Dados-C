@@ -3,37 +3,34 @@
 #include <time.h>
 #include "arvRB.h"
 
-void criaArv(Curso **raiz, int code, int ndisciplina){
+void criaArv(Arvore **raiz, int code, int ndisciplina){
     insere(raiz, code, ndisciplina);
     if((*raiz) != NULL)
-        (*raiz)->info->cor = BLACK;
+        (*raiz)->Curso->cor = BLACK;
 }
 
-void insere(Curso **raiz, int code, int ndisciplina) {
-    
+void insere(Arvore **raiz, int code, int ndisciplina) {
     if (*raiz == NULL) {
-        printf("test raiz");
         cont ++;
         *raiz = cria_NO(code, ndisciplina);
-    } else if (code < (*raiz)->info->codigo) {
-        printf("test esq");
+    } else if (code < (*raiz)->Curso->codigo) {
         insere(&(*raiz)->esq, code, ndisciplina);
-    } else if (code > (*raiz)->info->codigo) {
-        printf("test dir");
+    } else if (code > (*raiz)->Curso->codigo) {
         insere(&(*raiz)->dir, code, ndisciplina);
     } else {
+        printf("Codigo repetido");
     }
     *raiz = balancear(*raiz);
 }
 
-Curso* cria_NO(int code, int ndisciplina){
-    Curso *novo_NO = (Curso*)malloc(sizeof(Curso));
+Arvore* cria_NO(int code, int ndisciplina){
+    Arvore *novo_NO = (Arvore*)malloc(sizeof(Arvore));
     if (novo_NO != NULL){
-        novo_NO->info = (Info*)malloc(sizeof(Info));
-        if (novo_NO->info != NULL){
-            novo_NO->info->codigo = code;
-            novo_NO->info->disciplinas = ndisciplina;
-            novo_NO->info->cor = RED;
+        novo_NO->Curso = (Curso*)malloc(sizeof(Curso));
+        if (novo_NO->Curso != NULL){
+            novo_NO->Curso->codigo = code;
+            novo_NO->Curso->disciplinas = ndisciplina;
+            novo_NO->Curso->cor = RED;
             novo_NO->dir = NULL;
             novo_NO->esq = NULL;
         }
@@ -41,7 +38,7 @@ Curso* cria_NO(int code, int ndisciplina){
     return novo_NO;
 }
 
-Curso* balancear(Curso *NO) {
+Arvore* balancear(Arvore *NO) {
     // Nó à direita é vermelho e nó à esquerda é preto
     if (cor(NO->dir) == RED && cor(NO->esq) == BLACK)
         NO = rotacionaEsquerda(NO);
@@ -55,79 +52,191 @@ Curso* balancear(Curso *NO) {
     return NO;
 }
 
-int cor(Curso *NO){
+int cor(Arvore *NO){
     int ver;
     if(NO == NULL)
         ver = BLACK;
     else{
-        ver = NO->info->cor;
-        printf("cor do no %d\n", ver);
+        ver = NO->Curso->cor;
     }
     return ver;
 }
 
-void trocaCor(Curso *NO){
-    printf("trocou");
-    NO->info->cor = !NO->info->cor;
+void trocaCor(Arvore *NO){
+    NO->Curso->cor = !NO->Curso->cor;
     if(NO->esq != NULL)
-        NO->esq->info->cor = !NO->esq->info->cor;
+        NO->esq->Curso->cor = !NO->esq->Curso->cor;
     if(NO->dir != NULL)
-        NO->dir->info->cor = !NO->dir->info->cor; 
+        NO->dir->Curso->cor = !NO->dir->Curso->cor; 
 }
 
-Curso* rotacionaDireita(Curso *NO){
-    Curso *aux = NO->esq;
+Arvore* rotacionaDireita(Arvore *NO){
+    Arvore *aux = NO->esq;
     NO->esq = aux->dir;
     aux->dir = NO;
-    aux->info->cor = NO->info->cor;
-    NO->info->cor = RED;
+    aux->Curso->cor = NO->Curso->cor;
+    NO->Curso->cor = RED;
 
     return aux;
 }
 
-Curso* rotacionaEsquerda(Curso *NO){
-    Curso *aux = NO->dir;
+Arvore* rotacionaEsquerda(Arvore *NO){
+    Arvore *aux = NO->dir;
     NO->dir = aux->esq;
     aux->esq = NO;
-    aux->info->cor = NO->info->cor;
-    NO->info->cor = RED;
+    aux->Curso->cor = NO->Curso->cor;
+    NO->Curso->cor = RED;
 
     return aux;
 }
 
-
-int codigoCurso(){
+int codigoArvore(){
     // int x = 1 + ( rand() % 1000 );
     int x;
-    printf("\nCodigo do Curso: ");
+    printf("\nCodigo do Arvore: ");
     scanf("%d", &x);
     return x;
 }
 
-void busca_inorder(Curso *NO) {
+void busca_inorder(Arvore *NO) {
     if (NO != NULL) {
         busca_inorder(NO->esq);
-        printf("\nCodigo do curso: %d", NO->info->codigo);
-        printf("\nQuantidade de disciplinas: %d", NO->info->disciplinas);
-        printf("\nCor do NO: %s\n", NO->info->cor == RED ? "RED" : "BLACK");
+        printf("\nCodigo do Arvore: %d", NO->Curso->codigo);
+        printf("\nQuantidade de disciplinas: %d", NO->Curso->disciplinas);
+        printf("\nCor do NO: %s\n", NO->Curso->cor == RED ? "RED" : "BLACK");
         printf("\n-------------------------------------------------\n");
         busca_inorder(NO->dir);
     }
 }
 
+Arvore* moveRedEsquerda(Arvore *NO){
+    trocaCor(NO);
+
+    if(cor(NO->dir->esq) == RED){
+        NO->dir = rotacionaDireita(NO->dir);
+        NO = rotacionaEsquerda(NO);
+        trocaCor(NO);
+    }
+    return NO;
+}
+
+Arvore* moveRedDireita(Arvore *NO){
+    trocaCor(NO);
+
+    if(cor(NO->esq->esq) == RED){
+        NO = rotacionaDireita(NO);
+        trocaCor(NO);
+    }
+    return NO;
+}
+
+int buscaNO(Arvore *NO, int code){
+    int  achou;
+    printf("\naqui\n");
+    if((NO) != NULL){
+        if((NO->Curso->codigo) == code)
+            achou = 1;
+        if((NO->Curso->codigo) > code)
+            buscaNO((NO->esq), code);
+        if((NO->Curso->codigo) < code)
+            buscaNO((NO->dir), code);
+    }
+    else
+        achou = 0;
+    return achou;
+}
+
+Arvore* buscaMenor(Arvore *NO){
+    Arvore *no1 = NO;
+    Arvore *no2 = NO->esq;
+    while(no2 != NULL){
+        no1 = no2;
+        no2 = no2->esq;
+    }
+    return no1;
+}
+
+int remove_Arvore(Arvore *NO, int code){
+    int x = 0;
+    if(buscaNO(NO, code)){
+        Arvore* removido = NO;
+        printf("aqui 2\n");
+        removido = remove_NO(removido, code);
+        if(NO != NULL)
+            (NO)->Curso->cor = BLACK;
+        x = 1;
+    }
+    return x;
+}
+
+
+Arvore* remove_NO(Arvore *NO, int code) {
+    Arvore* retorno;
+
+    if (NO == NULL) {
+        retorno = NULL;
+    } else {
+        if (code < NO->Curso->codigo) {
+            if (cor(NO->esq) == BLACK && cor(NO->esq->esq) == BLACK) {
+                NO = moveRedDireita(NO);
+            }
+            NO->esq = remove_NO(NO->esq, code);
+        } else {
+            if (cor(NO->esq) == RED) {
+                NO = rotacionaDireita(NO);
+            }
+            if (code == NO->Curso->codigo && NO->dir == NULL) {
+                // Nó folha, liberar memória e ajustar ponteiros
+                free(NO);
+                NO = NULL;  // Ajuste para retornar NULL corretamente
+            } else {
+                if (cor(NO->dir) == BLACK && cor(NO->dir->esq) == BLACK) {
+                    NO = moveRedEsquerda(NO);
+                }
+                if (code == NO->Curso->codigo) {
+                    Arvore* menor = buscaMenor(NO->dir);
+                    NO->Curso = menor->Curso;
+                    NO->dir = removeMenor(NO->dir);
+                } else {
+                    NO->dir = remove_NO(NO->dir, code);
+                }
+            }
+        }
+
+        if (NO != NULL) {
+            NO = balancear(NO);
+        }
+
+        retorno = NO;
+    }
+
+    return retorno;
+}
+
+Arvore* removeMenor(Arvore *NO){
+    if(NO->esq == NULL)
+        free(NO);
+    if (cor(NO->esq) == BLACK && cor(NO->esq->esq) == BLACK) {
+        NO = moveRedDireita(NO);
+    }
+    NO->esq = removeMenor(NO->esq);
+    return balancear(NO);
+}
+
+
 int main(){
     srand(time(NULL));
     int code, escolha, ndisciplina;
-    Curso* raiz = NULL;
+    Arvore* raiz = NULL;
 
     do{
         // Exibir o menu
         printf("\n***********************************\n");
         printf("Menu:\n");
         printf("0 - Sair\n");
-        printf("1 - ADICIONAR NOVO CURSO 1\n");
-        printf("2 - EXIBIR CURSOS\n");
-        printf("3 - MOSTRAR COR DOS CURSOS\n");
+        printf("1 - ADICIONAR NOVO Arvore 1\n");
+        printf("2 - EXIBIR ArvoreS\n");
+        printf("3 - REMOVER CURSO\n");
         printf("4 - Op 4\n");
         printf("5 - Op 5\n\n");
         printf("Escolha uma op (0-5): \n");
@@ -136,7 +245,7 @@ int main(){
         switch (escolha)
         {
         case 1:
-            code = codigoCurso();
+            code = codigoArvore();
             printf("Quantidade de Disciplinas: \n");
             scanf("%d", &ndisciplina);
             criaArv(&raiz, code, ndisciplina);
@@ -144,122 +253,20 @@ int main(){
 
         case 2:
             if (raiz != NULL) {
-                    printf("Cursos:\n");
+                    printf("Arvores:\n");
                     busca_inorder(raiz);
                 } else {
-                    printf("\nNenhum curso adicionado.\n");
+                    printf("\nNenhum Arvore adicionado.\n");
                 }
             break;
 
         case 3:
+            printf("Codigo do curso a ser removido: ");
+            scanf("%d", &code);
+            remove_Arvore(raiz, code);
             break;
         }
     } while (escolha != 0);
 
     return 0;
 }
-
-// ArvRB* moveRedEsq(ArvRB *NO){
-//     troca_cor(NO);
-
-//     if(ver_cor(NO->dir->esq) == RED){
-//         NO->dir = rotaciona_dir(NO->dir);
-//         NO = rotaciona_esq(NO);
-//         troca_cor(NO);
-//     }
-//     return NO;
-// }
-
-// ArvRB* moveRedDir(ArvRB *NO){
-//     troca_cor(NO);
-
-//     if(ver_cor(NO->esq->esq) == RED){
-//         NO = rotaciona_dir(NO);
-//         troca_cor(NO);
-//     }
-// }
-
-// ArvRB* balancear(ArvRB *NO){
-//     if(ver_cor(NO->dir) == RED);
-//         NO = rotaciona_esq(NO);
-
-//     if((NO->esq) != NULL && ver_cor(NO->dir) == RED && ver_cor(NO->esq->esq) == RED)
-//         NO = rotaciona_dir(NO);
-
-//     if(ver_cor(NO->esq) == RED && ver_cor(NO->dir) == RED)
-//         troca_cor(NO);
-// }
-
-// int busca_NO(ArvRB *NO, int valor){
-//     int  achou;
-
-//     if((NO) != NULL){
-//         if((NO->info) == valor)
-//             achou = 1;
-//         if((NO->info) > valor)
-//             busca_NO((NO->esq), valor);
-//         if((NO->info) < valor)
-//             busca_NO((NO->dir), valor);
-//     }
-
-//     else
-//         achou = 0;
-
-//     return achou;
-// }
-
-// ArvRB* remove_ArvRB(ArvRB *NO, int valor){
-//     if(busca_NO(NO, valor)){
-//         ArvRB* NO = NO;
-
-//         NO = remove_NO (NO, valor);
-
-//         if(NO != NULL)
-//             (NO)->cor = BLACK;
-//     }
-// }
-
-// ArvRB* remove_NO(ArvRB *NO, int valor){
-//     if(valor < NO->info){
-//         if(ver_cor(NO->esq) == BLACK && ver_cor(NO->esq->esq) == BLACK)
-//             NO = moveRedDir(NO);
-//     }
-//     else{
-//         if(ver_cor(NO->esq) == RED)
-//             NO = rotaciona_dir(NO);
-
-//         if(valor == (NO->info) && (NO->dir == NULL))
-//             free(NO);
-
-//         if(ver_cor(NO->dir) == BLACK && ver_cor(NO->dir->esq) == BLACK)
-//             NO = moveRedDir(NO);
-
-//         if(valor == NO->info){
-//             ArvRB* x = busca_menor(NO->dir);
-//             NO->info = x->info;
-//             NO->dir = remove_menor(NO->dir);
-//         }
-//         else{
-//             NO->dir = remove_NO(NO->dir, valor);
-//         }
-//     }
-// }
-
-// ArvRB* remove_menor(ArvRB *NO){
-//     if(NO->esq == NULL)
-//         free(NO);
-//     if(ver_cor(NO->esq) == BLACK && ver_cor(NO->esq->esq) == BLACK)
-
-//     NO->esq = remove_menor(NO->esq);
-//     return balancear(NO);
-// }
-
-// ArvRB* busca_menor(ArvRB *NO){
-//     ArvRB *no1 = NO;
-//     ArvRB *no2 = NO->esq;
-//     while(no2 != NULL){
-//         no1 = no2;
-//         no2 = no2->esq;
-//     }
-//     return no1;
-// }

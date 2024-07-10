@@ -3,30 +3,43 @@
 #define RED 1 // Define as cores
 #define BLACK 0
 
-typedef struct Info{
+
+
+typedef struct Curso{
     int codigo;
     int disciplinas;
     int cor;
-} Info;
-
-typedef struct Curso{
-    Info *info;
-    struct Curso *esq;
-    struct Curso *dir;
 } Curso;
 
+typedef struct Arvore{
+    Curso *Curso;
+    struct Arvore *esq;
+    struct Arvore *dir;
+} Arvore;
+
 int cont = 0; 
+//Funções para inserção 
+void criaArv(Arvore **raiz, int code, int ndisciplina);
+void insere(Arvore **raiz, int code, int ndisciplina);
+Arvore* cria_NO(int code, int ndisciplina);
 
-void criaArv(Curso **raiz, int code, int ndisciplina);
-void insere(Curso **raiz, int code, int ndisciplina);
-Curso* cria_NO(int code, int ndisciplina);
-Curso* balancear(Curso *NO);
+//Funções auxiliares
+Arvore* balancear(Arvore *NO);
+int codigoArvore();
+void busca_inorder(Arvore *NO);
+int cor(Arvore *NO);
+void trocaCor(Arvore *NO);
+Arvore* rotacionaDireita(Arvore *NO);
+Arvore* rotacionaEsquerda(Arvore *NO);
+Arvore* moveRedEsquerda(Arvore *NO);
+Arvore* moveRedDireita(Arvore *NO);
+int buscaNO(Arvore *NO, int code);
+Arvore* buscaMenor(Arvore *NO);
 
-int codigoCurso();
-void busca_inorder(Curso *NO);
-int cor(Curso *NO);
-void trocaCor(Curso *NO);
-Curso* rotacionaDireita(Curso *NO);
-Curso* rotacionaEsquerda(Curso *NO);
+// Funções para remoção
+Arvore* remove_NO(Arvore *NO, int code);
+int remove_Arvore(Arvore *NO, int code);
+Arvore* removeMenor(Arvore *NO);
+
 
 #endif
