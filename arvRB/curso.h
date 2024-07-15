@@ -6,6 +6,8 @@
 typedef struct Info {
     char nomeCurso[MAX_NOME];
     int codigo;
+    int bloco;
+    int semana;
     int cor;
     struct Disciplina* Disciplinas; // Ponteiro para a árvore de disciplinas
 }Info ;
@@ -16,9 +18,9 @@ typedef struct Curso {
 } Curso;
 
 //Funções Inserir
-void criaCurso(Curso **raiz, const char* nomeCurso, int code); 
-void insereCurso(Curso **raiz,const char* nomeCurso, int code);
-Curso* cria_NOCurso(const char* nomeCurso, int code);
+void criaCurso(Curso **raiz, const char* nomeCurso, int code, int bloco, int semanas); 
+void insereCurso(Curso **raiz,const char* nomeCurso, int code, int bloco, int semanas);
+Curso* cria_NOCurso(const char* nomeCurso, int code, int bloco, int semanas);
 
 //Funções Remoção
 int remove_Curso(Curso **NO, int code);

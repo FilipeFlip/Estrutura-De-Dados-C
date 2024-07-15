@@ -45,14 +45,14 @@ int lerInteiroMenu() {
 }
 
 int main() {
-    int code, escolha = 0;
+    int code, bloco, escolha = 0;
+    int semana = 0; // Inicializando semana
     char nomeCurso[MAX_NOME], nomeDisciplina[MAX_NOME];
     Curso* cursos = NULL;
-    //Disciplina* disciplinas = NULL;
 
-    criaCurso(&cursos, "Engenharia de Software", 1);
-    criaCurso(&cursos, "Ciência da Computação", 2);
-    criaCurso(&cursos, "Sistemas de Informação", 3);
+    criaCurso(&cursos, "Engenharia de Software", 1, 4, 9);
+    criaCurso(&cursos, "Ciência da Computação", 2, 7, 6);
+    criaCurso(&cursos, "Sistemas de Informação", 3, 3, 4);
 
     do {
         // Exibir o menu
@@ -70,7 +70,6 @@ int main() {
         printf("9 - LISTAR DISCIPLINAS\n");
         printf("Escolha uma op (0-9): ");
 
-        
         escolha = lerInteiroMenu();
 
         switch (escolha) {
@@ -80,7 +79,11 @@ int main() {
                 while (getchar() != '\n');
                 printf("Codigo do Curso: ");
                 code = lerInteiroMenu();
-                criaCurso(&cursos, nomeCurso, code);
+                printf("Bloco do Curso: ");
+                bloco = lerInteiroMenu();
+                printf("Semana: ");
+                semana = lerInteiroMenu();
+                criaCurso(&cursos, nomeCurso, code, bloco, semana);
                 break;
 
             case 2:

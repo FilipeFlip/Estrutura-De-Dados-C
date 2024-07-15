@@ -6,32 +6,34 @@
 #include "disciplina.h"
 
 //Funções Inserir Curso 
-void criaCurso(Curso **raiz, const char* nomeCurso, int code) {
-    insereCurso(raiz, nomeCurso, code);
+void criaCurso(Curso **raiz, const char* nomeCurso, int code, int bloco, int semana) {
+    insereCurso(raiz, nomeCurso, code, bloco, semana);
     if ((*raiz) != NULL)
         (*raiz)->Info->cor = BLACK;  // Garantir que a raiz seja sempre preta
 }
 
-void insereCurso(Curso **raiz,const char* nomeCurso, int code){
+void insereCurso(Curso **raiz,const char* nomeCurso, int code, int bloco, int semana){
     if (*raiz == NULL) {
-        *raiz = cria_NOCurso(nomeCurso, code);
+        *raiz = cria_NOCurso(nomeCurso, code, bloco, semana);
     } else if (code < (*raiz)->Info->codigo) {
-        insereCurso(&(*raiz)->esquerda, nomeCurso, code);
+        insereCurso(&(*raiz)->esquerda, nomeCurso, code, bloco, semana);
     } else if (code > (*raiz)->Info->codigo) {
-        insereCurso(&(*raiz)->direita, nomeCurso, code);
+        insereCurso(&(*raiz)->direita, nomeCurso, code, bloco, semana);
     } else {
         printf("Codigo repetido");
     }
     *raiz = balancearCurso(*raiz);
 }
 
-Curso* cria_NOCurso(const char* nomeCurso, int code){
+Curso* cria_NOCurso(const char* nomeCurso, int code, int bloco, int semana){
     Curso *novo_NO = (Curso*)malloc(sizeof(Curso));
     if (novo_NO != NULL){
         novo_NO->Info = (Info*)malloc(sizeof(Info));
         if (novo_NO->Info != NULL){
             strcpy(novo_NO->Info->nomeCurso, nomeCurso);
             novo_NO->Info->codigo = code;
+            novo_NO->Info->bloco = bloco;
+            novo_NO->Info->semana = semana;
             novo_NO->Info->cor = RED;
             novo_NO->direita = NULL;
             novo_NO->esquerda = NULL;
@@ -49,7 +51,6 @@ Curso* buscaCurso(Curso *NO, int code){
         achou = buscaCurso(NO->esquerda, code);
     } else {
         achou = buscaCurso(NO->direita, code);
-        printf("aasdfa");
     }
 
     return achou;
@@ -131,6 +132,8 @@ void listaCurso(Curso *NO) {
         listaCurso(NO->esquerda);
         printf("\nNome do Curso: %s", NO->Info->nomeCurso);
         printf("\nCodigo do Curso: %d", NO->Info->codigo);
+        printf("\nNumero de blocos do curso: %d", NO->Info->bloco);
+        printf("\nNumero de semanas: %d", NO->Info->semana);
         printf("\nCor do NO: %s\n", NO->Info->cor == RED ? "RED" : "BLACK");
         printf("\n-------------------------------------------------\n");
         listaCurso(NO->direita);
